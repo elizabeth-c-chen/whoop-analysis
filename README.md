@@ -1,4 +1,8 @@
-# Whoop-downloader
+# Whoop Downloader
+
+Forked from [irickman](https://github.com/irickman/whoop-downloader).  
+
+<hr>
 The whoop-download script contains a set of wrapper functions to allow you to authenticate and download your WHOOP data.
 
 To get started, clone this repo, then install the required packages. Jupyter is not included, so to use the attached [example workbook](https://github.com/irickman/whoop-downloader/blob/main/Testing%20WHOOP%20Downloader.ipynb), you'll need to install jupyter as well. To ensure you have the correct packages, run the line below. Please note that the script may work without running requirements.txt if you already have these packages and dependencies installed. You may want to use a separate environment to keep your packages synced.
