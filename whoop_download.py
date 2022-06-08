@@ -4,7 +4,7 @@ import numpy as np
 import configparser
 from datetime import timedelta, datetime
 from dateutil import relativedelta, parser, rrule
-from dateutil.rrule import WEEKLY
+from dateutil.rrule import WEEKLY, DAILY
 
 
 class whoop_login:
@@ -27,14 +27,16 @@ class whoop_login:
         auth_code=self.auth_code
         headers={'authorization':auth_code}
         pull=requests.get(url,headers=headers)
-        if pull.status_code==200 and len(pull.content)>1:
+        try:
+            assert pull.status_code==200 and len(pull.content)>1
             if df:
-                d=pd.json_normalize(pull.json())
+                d = pd.json_normalize(pull.json())
                 return d
             else:
                 return pull.json()
-        else:
-            return "no response"
+        except AssertionError as e:
+            print(f"ERROR: {e}")
+            return
 
     def pull_sleep_main(self,sleep_id):
         athlete_id=self.whoop_id
@@ -269,10 +271,11 @@ class whoop_login:
             start_date=parser.isoparse(self.start_datetime).replace(tzinfo=None)
             end_time='T23:59:59.999Z'
             start_time='T00:00:00.000Z'
-            intervals=rrule.rrule(freq=WEEKLY,interval=1,until=self.current_datetime, dtstart=start_date)
+            intervals=rrule.rrule(freq=DAILY,interval=1,until=self.current_datetime, dtstart=start_date)
             date_range=[[d.strftime('%Y-%m-%d') + start_time,
-                        (d+relativedelta.relativedelta(weeks=1)).strftime('%Y-%m-%d') + end_time] for d in intervals]
+                        (d+relativedelta.relativedelta(days=1)).strftime('%Y-%m-%d') + end_time] for d in intervals]
 
+            
             hr_list=[]
             for dates in date_range:
                 start=dates[0]
@@ -544,9 +547,9 @@ class whoop_login:
                 end_time='T23:59:59.999Z'
                 start_time='T00:00:00.000Z'
                 ## using the st and e since it needs the datetime formatted date
-                intervals=rrule.rrule(freq=WEEKLY,interval=1,until=e, dtstart=st)
+                intervals=rrule.rrule(freq=DAILY,interval=1,until=self.current_datetime, dtstart=start_date)
                 date_range=[[d.strftime('%Y-%m-%d') + start_time,
-                            (d+relativedelta.relativedelta(weeks=1)).strftime('%Y-%m-%d') + end_time] for d in intervals]
+                        (d+relativedelta.relativedelta(days=1)).strftime('%Y-%m-%d') + end_time] for d in intervals]
 
                 hr_list=[]
                 for dates in date_range:
