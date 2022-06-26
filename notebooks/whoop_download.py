@@ -547,7 +547,7 @@ class whoop_login:
                 end_time='T23:59:59.999Z'
                 start_time='T00:00:00.000Z'
                 ## using the st and e since it needs the datetime formatted date
-                intervals=rrule.rrule(freq=DAILY,interval=1,until=self.current_datetime, dtstart=start_date)
+                intervals=rrule.rrule(freq=DAILY,interval=1,until=e, dtstart=st)
                 date_range=[[d.strftime('%Y-%m-%d') + start_time,
                         (d+relativedelta.relativedelta(days=1)).strftime('%Y-%m-%d') + end_time] for d in intervals]
 
